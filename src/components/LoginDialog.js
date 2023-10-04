@@ -11,7 +11,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { Link, TextField } from "@mui/material";
 
 import cookie from "react-cookies";
-// import { JWT_COOKIE_NAME } from "../constant"
+import { GOOGLE_MAP_API_KEY } from '../constant';
+
 
 export default function LoginDialog(props) {
 
@@ -20,11 +21,10 @@ export default function LoginDialog(props) {
     let password;
 
     const login = () => {
-
-        if (props.googleMapApiKey === "") {
-            props.googleMapApiKey = password;
-        }
+        const input_key = password;
+        cookie.save(GOOGLE_MAP_API_KEY, input_key);
         window.location.reload();
+        console.log("password", password)
     }
 
     return (

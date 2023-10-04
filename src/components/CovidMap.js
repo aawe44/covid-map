@@ -3,8 +3,12 @@ import GoogleMapReact from 'google-map-react';
 import { CovidCaseService } from "../service/CovidCaseService";
 import { MapUtils } from "../utils/MapUtils";
 import CovidCard from "./CovidCard";
+import { mock_points } from "../data";
+import cookie from "react-cookies";
+import { GOOGLE_MAP_API_KEY } from '../constant';
 
-export default function CovidMap() {
+
+export default function CovidMap(props) {
     const defaultProps = {
         center: {
             lat: 40,
@@ -84,26 +88,36 @@ export default function CovidMap() {
         return covidCards;
     }
 
+    console.log("GOOGLE_MAP_API_KEY", cookie.load(GOOGLE_MAP_API_KEY));
+
     return (
         // Important! Always set the container height explicitly
+
         <div style={{ height: '90vh', width: '100%' }}>
             <GoogleMapReact
-                bootstrapURLKeys={{ key: "" }}
+                
+                bootstrapURLKeys= {cookie.load(GOOGLE_MAP_API_KEY)}
                 defaultCenter={defaultProps.center}
                 defaultZoom={defaultProps.zoom}
                 onGoogleApiLoaded={() => {
-                    CovidCaseService.getAllCountyCases() //promise
-                        .then(response => {
-                            //成功                            
-                            const countyData = response.data;
-                            const completePoints = MapUtils.convertCovidPoints(countyData);
-                            setPoints(completePoints);
-                            console.log(completePoints);
-                        })
-                        .catch(error => {
-                            //失敗
-                            console.error(error);
-                        })
+                    const countyData = mock_points
+                    const completePoints = MapUtils.convertCovidPoints(countyData);
+                    setPoints(completePoints);
+                    console.log(completePoints);
+
+                    // CovidCaseService.getAllCountyCases() //promise
+                    //     .then(response => {
+                    //         //成功                            
+                    //         // const countyData = response.data;
+                    //         const countyData = mock_points
+                    //         const completePoints = MapUtils.convertCovidPoints(countyData);
+                    //         setPoints(completePoints);
+                    //         console.log(completePoints);
+                    //     })
+                    //     .catch(error => {
+                    //         //失敗
+                    //         console.error(error);
+                    //     })
                 }}
 
                 onChange={({ center, zoom, bounds, marginBounds }) => {

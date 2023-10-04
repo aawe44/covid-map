@@ -10,11 +10,25 @@ import cookie from "react-cookies";
 // import { JWT_COOKIE_NAME } from '../constant';
 // import RegisterDialog from './RegisterDialog';
 
-export default function MenuBar(props) {
+import { GOOGLE_MAP_API_KEY } from '../constant';
+
+export default function MenuBar() {
+
+
+    let hasLoggedIn = !!cookie.load(GOOGLE_MAP_API_KEY);
+    let buttonText = hasLoggedIn ? "Logout" : "Login"
 
     const [open, setOpen] = React.useState(false);
+
+
     const handleClickOpen = () => {
-        setOpen(true);
+
+        if (hasLoggedIn) {
+            cookie.remove(GOOGLE_MAP_API_KEY);
+            window.location.reload();
+        } else {
+            setOpen(true);
+        }
     };
 
     const handleClose = () => {
@@ -33,11 +47,11 @@ export default function MenuBar(props) {
                     <Button color="inherit">County</Button>
                     <Button color="inherit">State</Button>
                     <Button color="inherit">Nation</Button>
-                    <Button color="inherit" onClick={handleClickOpen}>Login</Button>
+                    <Button color="inherit" onClick={handleClickOpen}>{buttonText}</Button>
 
                 </Toolbar>
             </AppBar>
-            <LoginDialog open={open} handleClose={handleClose} handleApikeyLogin={props.handleApikey} getApiKey={props.getApiKey} googleMapApiKey={props.googleMapApiKeyMB} />
+            <LoginDialog open={open} handleClose={handleClose} />
         </Box>
     );
 }
